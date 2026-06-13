@@ -14,7 +14,7 @@ function checkCode() {
         "pastel": "messages/kolega7.html",
         "zen": "messages/kolega8.html",
         "gold": "messages/kolega9.html",
-        "michalina": "messages/michalina.html",
+        "michalina2": "messages/michalina2.html",
         "michalina1": "messages/michalina1.html"
     };
 
