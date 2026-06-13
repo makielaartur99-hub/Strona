@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strefa Znajomego</title>
+
+    <style>
+      /* Gwiazdka oznacza reset domyślnych ustawień przeglądarki dla WSZYSTKICH elementów strony */
+      * {
+        box-sizing: border-box; /* Sprawia, że wewnętrzne odstępy (padding) nie rozpychają okienka ponad ustaloną szerokość */
+        margin: 0; /* Resetuje domyślne marginesy zewnętrzne */
+        padding: 0; /* Resetuje domyślne marginesy wewnętrzne */
+        font-family:
+          "Segoe UI", system-ui, sans-serif; /* Nowoczesna, czytelna czcionka bezszeryfowa */
+      }
+
+      /* Stylizacja tła i ułożenia elementów na całej stronie */
+      body {
+        /* RECEPTA NA TŁO: radial-gradient tworzy okrągłe przejście tonalne koloru. 
+               Pierwszy kolor (#1e1b4b) jest na środku ekranu, drugi (#09070f) na krawędziach.
+               TUTAJ MOŻESZ WPISAĆ WŁASNE KOLORY DLA KAŻDEGO KOLEGI (np. odcienie czerwieni, zieleni itp.) */
+        background: radial-gradient(circle at center, #1e1b4b 0%, #09070f 100%);
+
+        /* FLEXBOX: Poniższe trzy linijki to potężne narzędzie, które automatycznie 
+               ustawia nasze okienko IDEALNIE na samym środku ekranu, niezależnie od urządzenia */
+        display: flex;
+        justify-content: center; /* Centrowanie w poziomie */
+        align-items: center; /* Centrowanie w pionie */
+
+        min-height: 100vh; /* Sprawia, że tło strony zawsze zajmuje minimum 100% wysokości wyświetlacza */
+        padding: 20px; /* Bezpieczny margines wokół okienka, żeby na małych telefonach nie dotykało ono krawędzi ekranu */
+        overflow: hidden; /* Ukrywa paski przewijania (suwaki), żeby strona była całkowicie nieruchoma */
+      }
+
+      /* Stylizacja głównego szklanego okienka (efekt Glassmorphism) */
+      .card {
+        /* Półprzezroczyste tło. Trzy pierwsze liczby to kolor biały (255, 255, 255), 
+               a ostatnia (0.04) to przezroczystość w skali od 0 do 1. Im mniejsza, tym bardziej przezroczyste okienko */
+        background: rgba(255, 255, 255, 0.04);
+
+        /* KLUCZ DO EFEKTU SZKŁA: Rozmywa wszystko to, co znajduje się bezpośrednio ZA okienkiem */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(
+          20px
+        ); /* Wersja dla przeglądarek Apple (Safari / iPhone), bez tego efekt szkła tam nie zadziała */
+
+        /* Subtelna, bardzo cienka, półprzezroczysta ramka, która imituje krawędź błyszczącego szkła */
+        border: 1px solid rgba(255, 255, 255, 0.15);
+
+        padding: 45px 30px; /* Przestrzeń wewnątrz okienka (45px wolnego od góry i dołu, 30px od boków) */
+        border-radius: 32px; /* Silne zaokrąglenie rogów okienka, nadające mu nowoczesny wygląd */
+        text-align: center; /* Automatyczne wyśrodkowanie wszystkich tekstów i linków wewnątrz okienka */
+
+        width: 100%; /* Na bardzo małych telefonach okienko rozciągnie się na całą dostępną szerokość... */
+        max-width: 420px; /* ...ale na tabletach i komputerach nigdy nie przekroczy ładnych 420 pikseli */
+
+        /* Miękki, ciemny cień rzucany przez okienko, dający efekt trójwymiarowości (unoszenia się nad tłem) */
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+
+        /* PARAMETRY ANIMACJI:
+               - fadeIn: nazwa reguły animacji, którą opisaliśmy na samym dole
+               - 1.2s: animacja pojawiania się okienka potrwa sekundę i dwie dziesiąte
+               - ease: ruch zacznie się powoli, przyspieszy i na koniec znowu zwolni (płynny efekt)
+               - 2s: OPÓŹNIENIE. Okienko czeka dokładnie 2 sekundy przed rozpoczęciem pokazywania się!
+               - backwards: krytyczna funkcja – sprawia, że okienko jest całkowicie UKRYTE podczas tych pierwszych 2 sekund oczekiwania */
+        animation: fadeIn 1.2s ease 2s backwards;
+      }
+
+      /* Stylizacja głównego nagłówka (np. ksywki kolegi) */
+      h1 {
+        color: #ffffff; /* Kolor tekstu: czysta biel */
+        font-size: 2rem; /* Rozmiar czcionki (2 razy większy niż standardowy tekst strony) */
+        margin-bottom: 20px; /* Margines pod nagłówkiem, odpychający zwykły tekst w dół */
+        letter-spacing: 1px; /* Minimalne, eleganckie rozszerzenie odstępów między literami */
+      }
+
+      /* Stylizacja tekstu z dedykowaną wiadomością */
+      p {
+        color: #cbd5e1; /* Kolor tekstu: delikatny, pastelowy jasnoszary (nie męczy wzroku tak jak czysta biel) */
+        font-size: 1.05rem; /* Rozmiar czcionki tekstu głównego */
+        line-height: 1.6; /* Interlinia, czyli odstęp między linijkami (tekst zyskuje "powietrze" i lepiej się go czyta) */
+        margin-bottom: 30px; /* Margines pod akapitem, odpychający przycisk powrotu w dół */
+      }
+
+      /* Stylizacja przycisku/linku powrotnego */
+      a {
+        color: rgba(
+          255,
+          255,
+          255,
+          0.5
+        ); /* Domyślnie tekst przycisku jest w 50% przezroczysty */
+        text-decoration: none; /* Wyłącza domyślne, brzydkie podkreślenie linku w przeglądarce */
+        font-size: 0.9rem; /* Rozmiar czcionki przycisku */
+        transition: all 0.3s; /* Sprawia, że zmiana koloru po najechaniu myszką nie jest natychmiastowa, tylko płynna */
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.3); /* Tworzy elegancką, przerywaną linię pod przyciskiem */
+        padding-bottom: 3px; /* Przestrzeń między tekstem przycisku a naszą przerywaną linią */
+      }
+
+      /* Efekt po najechaniu kursorem myszy na przycisk (lub dotknięciu go palcem na telefonie) */
+      a:hover {
+        color: #ffffff; /* Tekst przycisku rozświetla się do pełnej bieli */
+        border-color: #ffffff; /* Przerywana linia pod spodem również staje się w pełni biała */
+      }
+
+      /* REGUŁY ANIMACJI POJAWIANIA SIĘ: Krok po kroku definiujemy stan początkowy i końcowy */
+      @keyframes fadeIn {
+        from {
+          opacity: 0; /* Start: okienko jest całkowicie niewidzialne */
+          transform: translateY(
+            20px
+          ); /* Start: okienko jest przesunięte o 20 pikseli w dół */
+        }
+        to {
+          opacity: 1; /* Koniec: okienko staje się w 100% widoczne */
+          transform: translateY(
+            0
+          ); /* Koniec: okienko wraca na swoje idealne, wycentrowane miejsce */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>NAZWA_KOLEGI</h1>
+
+      <p>
+        Tutaj wpisz unikalną treść wiadomości dla swojego kumpla. Okienko
+        wyskakuje płynnie po dokładnie 2 sekundach, a dzięki efektowi
+        Glassmorphismu wygląda mega nowocześnie zarówno na komputerze, jak i na
+        telefonie!
+      </p>
+
+      <a href="../index.html">Wróć do portalu</a>
+    </div>
+  </body>
+</html>
